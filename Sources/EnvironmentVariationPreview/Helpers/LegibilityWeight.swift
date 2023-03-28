@@ -1,3 +1,4 @@
+#if targetEnvironment(simulator)
 import Foundation
 import SwiftUI
 
@@ -10,3 +11,4 @@ extension LegibilityWeight: CustomStringConvertible {
     }
   }
 }
+#endif
