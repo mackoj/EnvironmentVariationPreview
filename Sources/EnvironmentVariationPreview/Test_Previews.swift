@@ -1,7 +1,6 @@
 import Foundation
 import SwiftUI
 
-
 struct Previews_Test_Previews: PreviewProvider {
   static var previews: some View {
     VStack {
