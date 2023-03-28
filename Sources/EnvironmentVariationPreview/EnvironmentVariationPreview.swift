@@ -33,7 +33,7 @@ struct EnvironmentVariationPreview<Value: View>: View {
   ///   - environmentValues: an optional array of EnvironmentValueItem which are environment values to apply during the preview. This parameter has a default value of light colorScheme.
   ///   - viewToPreview: the SwiftUI View to preview.
   init(
-    environmentValues: EnvironmentValueItemList = [.colorScheme(.light)],
+    environmentValues: EnvironmentValueItemList = [.colorScheme(.light), .colorScheme(.dark)],
     _ viewToPreview: Value
   ) {
     self.preview = viewToPreview

@@ -5,7 +5,7 @@ import CoreData
 /// This enum represent all possible value that can be applied to the environement
 /// to modify the rendering of a SwiftUI preview
 @available(iOS 16.4, macOS 13.3, tvOS 14.0, watchOS 7.0, *)
-enum EnvironmentValueItem {
+public enum EnvironmentValueItem {
   case accessibilityEnabled(Bool)
   case allowsTightening(Bool)
   case autocorrectionDisabled(Bool)
@@ -153,16 +153,6 @@ enum EnvironmentValueItem {
       case .verticalSizeClass(let value): return "verticalSizeClass: \(value.debugDescription)"
       case .horizontalScrollBounceBehavior(let value): return "horizontalScrollBounceBehavior: \(value)"
       case .verticalScrollBounceBehavior(let value): return "verticalScrollBounceBehavior: \(value)"
-    }
-  }
-}
-
-extension LegibilityWeight: CustomStringConvertible {
-  public var description: String {
-    switch self {
-      case .regular: return "regular"
-      case .bold: return "bold"
-      @unknown default: return "default"
     }
   }
 }

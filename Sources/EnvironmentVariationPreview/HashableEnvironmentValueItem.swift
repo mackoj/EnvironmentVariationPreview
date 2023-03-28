@@ -2,16 +2,16 @@ import Foundation
 
 /// This type add support for `Hashable` and `Identifiable` to `EnvironmentValueItem`
 @available(iOS 16.4, macOS 13.3, tvOS 14.0, watchOS 7.0, *)
-@dynamicMemberLookup struct HashableEnvironmentValueItem {
-  let id: UUID
+@dynamicMemberLookup public struct HashableEnvironmentValueItem {
+  public let id: UUID
   let item: EnvironmentValueItem
   
-  init(item: EnvironmentValueItem) {
+  public init(item: EnvironmentValueItem) {
     self.id = UUID()
     self.item = item
   }
   
-  subscript<T>(dynamicMember keyPath: KeyPath<EnvironmentValueItem, T>) -> T {
+  public subscript<T>(dynamicMember keyPath: KeyPath<EnvironmentValueItem, T>) -> T {
       item[keyPath: keyPath]
   }
 }
@@ -22,7 +22,7 @@ extension HashableEnvironmentValueItem: Hashable {
     hasher.combine(id)
   }
   
-  static func == (lhs: HashableEnvironmentValueItem, rhs: HashableEnvironmentValueItem) -> Bool {
+  public static func == (lhs: HashableEnvironmentValueItem, rhs: HashableEnvironmentValueItem) -> Bool {
     lhs.id == rhs.id
   }
 }
