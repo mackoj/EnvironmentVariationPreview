@@ -1,8 +1,26 @@
+#if targetEnvironment(simulator)
 import Foundation
 import SwiftUI
 
-@available(iOS 16.4, macOS 13.3, tvOS 14.0, watchOS 7.0, *)
 extension View {
+  /// `environmentVariations` is a `ViewModifier` that allows previewing a SwiftUI `View` with differents environment values.
+  ///
+  /// In this example, MyView is previewed using various environment values, including light/dark mode, right-to-left/left-to-right layout direction, and different dynamic type sizes.
+  ///
+  /// Example usage:
+  /// ```swift
+  /// struct MyView: View {
+  ///   var body: some View {
+  ///     Text("Hello, World!")
+  ///   }
+  /// }
+  ///
+  /// struct MyView_Previews: PreviewProvider {
+  ///   static var previews: some View {
+  ///     MyView().environmentVariations([ .colorScheme(.light), .colorScheme(.dark), .layoutDirection(.rightToLeft), .dynamicTypeSize(.xSmall), .dynamicTypeSize(.large), .dynamicTypeSize(.xxxLarge)]) // Use default environment values
+  ///   }
+  /// }
+  /// ```
   public func environmentVariations(
     _ variarions: EnvironmentValueItemList = [.colorScheme(.light), .colorScheme(.dark)]
   ) -> some View {
@@ -10,7 +28,7 @@ extension View {
   }
 }
 
-@available(iOS 16.4, macOS 13.3, tvOS 14.0, watchOS 7.0, *)
+
 struct EnvironmentVariationsModifier: ViewModifier {
   let variarions: EnvironmentValueItemList
   
@@ -40,3 +58,4 @@ struct EnvironmentVariationsModifier: ViewModifier {
     }
   }
 }
+#endif

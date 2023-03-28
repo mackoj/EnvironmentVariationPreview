@@ -1,10 +1,10 @@
+#if targetEnvironment(simulator)
 import Foundation
 import SwiftUI
 import CoreData
 
 /// This enum represent all possible value that can be applied to the environement
 /// to modify the rendering of a SwiftUI preview
-@available(iOS 16.4, macOS 13.3, tvOS 14.0, watchOS 7.0, *)
 public enum EnvironmentValueItem {
   case accessibilityEnabled(Bool)
   case allowsTightening(Bool)
@@ -25,7 +25,7 @@ public enum EnvironmentValueItem {
   case font(Font?)
   case headerProminence(Prominence)
   case horizontalSizeClass(UserInterfaceSizeClass?)
-  case horizontalScrollBounceBehavior(ScrollBounceBehavior)
+//  case horizontalScrollBounceBehavior(ScrollBounceBehavior)
   case isEnabled(Bool)
   case imageScale(Image.Scale)
   case isScrollEnabled(Bool)
@@ -50,7 +50,7 @@ public enum EnvironmentValueItem {
   case timeZone(TimeZone)
   case truncationMode(Text.TruncationMode)
   case verticalSizeClass(UserInterfaceSizeClass?)
-  case verticalScrollBounceBehavior(ScrollBounceBehavior)
+//  case verticalScrollBounceBehavior(ScrollBounceBehavior)
   
   /// This apply the `EnvironmentValueItem` to the preview's `Environment`
   /// Using AnyView is not ideal but this is intented to be used for previewOnly.
@@ -100,8 +100,8 @@ public enum EnvironmentValueItem {
       case .timeZone(let value): return AnyView(content.environment(\.timeZone, value))
       case .truncationMode(let value): return AnyView(content.environment(\.truncationMode, value))
       case .verticalSizeClass(let value): return AnyView(content.environment(\.verticalSizeClass, value))
-      case .horizontalScrollBounceBehavior(let value): return AnyView(content.environment(\.horizontalScrollBounceBehavior, value))
-      case .verticalScrollBounceBehavior(let value): return AnyView(content.environment(\.verticalScrollBounceBehavior, value))
+//      case .horizontalScrollBounceBehavior(let value): return AnyView(content.environment(\.horizontalScrollBounceBehavior, value))
+//      case .verticalScrollBounceBehavior(let value): return AnyView(content.environment(\.verticalScrollBounceBehavior, value))
     }
   }
   
@@ -151,8 +151,9 @@ public enum EnvironmentValueItem {
       case .timeZone(let value): return "timeZone: \(value)"
       case .truncationMode(let value): return "truncationMode: \(value)"
       case .verticalSizeClass(let value): return "verticalSizeClass: \(value.debugDescription)"
-      case .horizontalScrollBounceBehavior(let value): return "horizontalScrollBounceBehavior: \(value)"
-      case .verticalScrollBounceBehavior(let value): return "verticalScrollBounceBehavior: \(value)"
+//      case .horizontalScrollBounceBehavior(let value): return "horizontalScrollBounceBehavior: \(value)"
+//      case .verticalScrollBounceBehavior(let value): return "verticalScrollBounceBehavior: \(value)"
     }
   }
 }
+#endif
