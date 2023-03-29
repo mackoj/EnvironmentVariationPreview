@@ -44,6 +44,7 @@ struct EnvironmentVariationsModifier: ViewModifier {
             .frame(maxWidth: .infinity)
             .background(Color.black)
         }
+        .background(environmentValue.colorScheme == .dark ? Color.black : Color.white)
         .fixedSize()
         .clipShape(RoundedRectangle(cornerRadius: 4))
         .contentShape(RoundedRectangle(cornerRadius: 4))

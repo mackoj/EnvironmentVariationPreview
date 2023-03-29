@@ -186,4 +186,13 @@ public enum EnvironmentValueItem {
     }
   }
 }
+
+extension EnvironmentValueItem {
+  var colorScheme: ColorScheme? {
+    switch self {
+      case .colorScheme(let value): return value
+      default: return nil
+    }
+  }
+}
 #endif
