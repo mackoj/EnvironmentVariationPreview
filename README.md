@@ -65,3 +65,16 @@ In order to make it work you just have to add a view modifier in your SwiftUI pr
 ## License
 
 SwiftUI Environment Value Preview is released under the MIT License. See LICENSE for details.
+
+## Contributing
+
+We welcome contributions from the community to help improve and expand EnvironmentVariationPreview. If you'd like to contribute, please follow these steps:
+
+- Fork the repository on GitHub.
+- Create a new branch with a descriptive name, e.g., feature/new-environment-value.
+- Implement your changes or bug fixes, ensuring that your code is clean and well-documented.
+- Submit a pull request, detailing your changes and the purpose behind them.
+- Make sure to keep your pull request up-to-date with the base branch, resolving any conflicts that may arise.
+- By contributing, you agree that your contributions will be licensed under the same license as the original project.
+
+If you have any questions or need help, feel free to open an issue or reach out to the maintainers. We appreciate your support!
