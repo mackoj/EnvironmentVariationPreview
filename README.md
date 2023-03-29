@@ -4,10 +4,6 @@ EnvironmentVariationPreview is a SwiftUI library designed to simplify the proces
 
 ### Why
 
-It can be pretty complex to maitaint an app that need to work in various environnement (various dynamic sizes, appearence, accessiblity, locales, screen size, etc).
-A way to mitigate this is to do Snapshot testing and have a snapshot of all possible configuration in order to know what it should look like and prevent regression.
-This library has been made while I was working on implementing snapshot testing in my UI Library. It's goal is to give a simplify way to test your UI againts various environement.
-
 Maintaining an app that must work across diverse environments (such as varying dynamic sizes, appearances, accessibility settings, locales, screen sizes, etc.) can be challenging. One way to address this issue is through [snapshot testing](https://github.com/doordash-oss/swiftui-preview-snapshots), which enables you to capture snapshots of all possible configurations and compare them to expected results to prevent regressions. EnvironmentVariationPreview was created to facilitate snapshot testing for your UI library and to provide a streamlined approach for testing your UI against different environment settings.
 
 ## Features
@@ -30,10 +26,33 @@ dependencies: [
 
 ## Usage
 
-- Import the library in your SwiftUI file: `import SwiftUIEnvironmentValuePreview`
-- Use the EnvironmentValueItem enum to create an instance of the environment value you want to apply to the preview. `let colorSchemeDark = EnvironmentValueItem.colorScheme(.dark)`
-- Apply the environment value to your preview using the applyEnvironmentValue(_:) method ``
-- Customize your SwiftUI previews with different environment values as needed.
+To use EnvironmentVariationPreview in your SwiftUI project, follow these steps:
+
+- Import the library in your SwiftUI file: `import EnvironmentVariationPreview`
+- Apply the `.environmentVariations()` view modifier to your preview.
+- Provide an array of environment values you wish to preview, such as `[.colorScheme(.light), .colorScheme(.dark), .layoutDirection(.rightToLeft), .dynamicTypeSize(.xSmall), .dynamicTypeSize(.large), .dynamicTypeSize(.xxxLarge)]`.
+
+For example:
+
+```swift
+import Foundation
+import SwiftUI
+import EnvironmentVariationPreview
+
+struct MyView_Previews: PreviewProvider {
+  static var previews: some View {
+    MyView()
+      .environmentVariations([
+        .colorScheme(.light),
+        .colorScheme(.dark),
+        .layoutDirection(.rightToLeft),
+        .dynamicTypeSize(.xSmall),
+        .dynamicTypeSize(.large),
+        .dynamicTypeSize(.xxxLarge)
+      ])
+  }
+}
+```
 
 ## License
 
@@ -42,23 +61,6 @@ SwiftUI Environment Value Preview is released under the MIT License. See LICENSE
 ## Example
 
 In order to make it work you just have to add a view modifier in your SwiftUI preview.
-
-```swift
-import Foundation
-import SwiftUI
-
-struct Previews_Test_Previews: PreviewProvider {
-  static var previews: some View {
-    Label("Variation Preview", systemImage: "basketball")
-      .fontWeight(.bold)
-      .foregroundColor(Color("fg", bundle: .module))
-      .padding()
-      .background(Color("bg", bundle: .module))
-      .cornerRadius(4)
-      .environmentVariations([ .colorScheme(.light), .colorScheme(.dark), .layoutDirection(.rightToLeft), .dynamicTypeSize(.xSmall), .dynamicTypeSize(.large), .dynamicTypeSize(.xxxLarge)])
-  }
-}
-```
 
 | code | Redering |
 | --- | --- |
