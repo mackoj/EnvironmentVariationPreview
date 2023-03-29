@@ -3,8 +3,35 @@ import Foundation
 import SwiftUI
 import CoreData
 
-/// This enum represent all possible value that can be applied to the environement
-/// to modify the rendering of a SwiftUI preview
+/// An enum representing all possible environment values that can be applied to modify the rendering of a SwiftUI preview.
+///
+/// - Note: This contains only modifiable properties of the SwiftUI environment, thus some elements are not available, such as:
+///   - accessibilityDifferentiateWithoutColor
+///   - accessibilityInvertColors
+///   - accessibilityLargeContentViewerEnabled
+///   - accessibilityQuickActionsEnabled
+///   - accessibilityReduceMotion
+///   - accessibilityReduceTransparency
+///   - accessibilityShowButtonShapes
+///   - accessibilitySwitchControlEnabled
+///   - accessibilityVoiceOverEnabled
+///   - colorSchemeContrast
+///   - dismiss
+///   - description
+///   - dismissSearch
+///   - horizontalScrollIndicatorVisibility
+///   - isFocused
+///   - isPresented
+///   - isSearching
+///   - keyboardShortcut
+///   - openWindow
+///   - pixelLength
+///   - rename
+///   - refresh
+///   - supportsMultipleWindows
+///   - searchSuggestionsPlacement
+///   - undoManager
+///   - verticalScrollIndicatorVisibility
 public enum EnvironmentValueItem {
   case accessibilityEnabled(Bool)
   case allowsTightening(Bool)
@@ -52,9 +79,12 @@ public enum EnvironmentValueItem {
   case verticalSizeClass(UserInterfaceSizeClass?)
 //  case verticalScrollBounceBehavior(ScrollBounceBehavior)
   
-  /// This apply the `EnvironmentValueItem` to the preview's `Environment`
-  /// Using AnyView is not ideal but this is intented to be used for previewOnly.
-  /// When the Swift Generics and ResultBuilder are strong enoght to support this case I will remove all AnyView that are currently here for compiling raison and add nothing the mecanism
+  /// Applies the `EnvironmentValueItem` to the given `View`'s environment.
+  /// The usage of `AnyView` is not ideal but is intended to be used for previews only.
+  /// When Swift Generics and ResultBuilder support this case, `AnyView` instances will be removed.
+  ///
+  /// - Parameter content: A `View` to which the environment value should be applied.
+  /// - Returns: A view with the environment value applied.
   func apply<V: View>(to content: V) -> some View {
     switch self {
       case .accessibilityEnabled(let value): return AnyView(content.environment(\.accessibilityEnabled, value))
@@ -105,7 +135,7 @@ public enum EnvironmentValueItem {
     }
   }
   
-  /// This is used to set the title of the preview
+  /// A computed property that returns a description of the environment value, used for setting the preview's title.
   var description: String {
     switch self {
       case .accessibilityEnabled(let value): return "accessibilityEnabled: \(value)"

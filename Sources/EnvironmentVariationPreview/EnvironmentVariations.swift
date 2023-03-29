@@ -2,25 +2,17 @@
 import Foundation
 import SwiftUI
 
+/// A SwiftUI `View` extension that provides an `environmentVariations` function. This function accepts a list of environment values and returns a modified view that displays previews of the original view with each of the specified environment values.
+///
+/// - Note: This code is designed to run in the simulator environment only.
+///
 extension View {
-  /// `environmentVariations` is a `ViewModifier` that allows previewing a SwiftUI `View` with differents environment values.
+  /// Applies the specified environment values to the view and returns a modified view displaying each variation.
   ///
-  /// In this example, MyView is previewed using various environment values, including light/dark mode, right-to-left/left-to-right layout direction, and different dynamic type sizes.
+  /// By default, `environmentVariations` will use a light and dark color scheme.
   ///
-  /// Example usage:
-  /// ```swift
-  /// struct MyView: View {
-  ///   var body: some View {
-  ///     Text("Hello, World!")
-  ///   }
-  /// }
-  ///
-  /// struct MyView_Previews: PreviewProvider {
-  ///   static var previews: some View {
-  ///     MyView().environmentVariations([ .colorScheme(.light), .colorScheme(.dark), .layoutDirection(.rightToLeft), .dynamicTypeSize(.xSmall), .dynamicTypeSize(.large), .dynamicTypeSize(.xxxLarge)]) // Use default environment values
-  ///   }
-  /// }
-  /// ```
+  /// - Parameter variarions: A list of environment values to apply to the view. The default value is `[.colorScheme(.light), .colorScheme(.dark)]`.
+  /// - Returns: A modified view that displays previews of the original view with each of the specified environment values.
   public func environmentVariations(
     _ variarions: EnvironmentValueItemList = [.colorScheme(.light), .colorScheme(.dark)]
   ) -> some View {
@@ -30,8 +22,13 @@ extension View {
 
 
 struct EnvironmentVariationsModifier: ViewModifier {
+  /// The list of environment values to apply to the content view.
   let variarions: EnvironmentValueItemList
   
+  /// Returns a modified view that displays previews of the content view with each of the specified environment values.
+  ///
+  /// - Parameter content: The content view to which the environment values will be applied.
+  /// - Returns: A modified view that displays previews of the content view with each of the specified environment values.
   func body(content: Content) -> some View {
     Group {
       ForEach(variarions, id: \.self) { environmentValue in
