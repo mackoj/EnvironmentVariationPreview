@@ -33,29 +33,18 @@ SwiftUI Environment Value Preview is released under the MIT License. See LICENSE
 
 ## Example
 
+```swift
+    Label("Variation Preview", systemImage: "basketball")
+      .fontWeight(.bold)
+      .foregroundColor(Color("fg", bundle: .module))
+      .padding()
+      .background(Color("bg", bundle: .module))
+      .cornerRadius(4)
+      .environmentVariations([ .colorScheme(.light), .colorScheme(.dark), .layoutDirection(.rightToLeft), .dynamicTypeSize(.xSmall), .dynamicTypeSize(.large), .dynamicTypeSize(.xxxLarge)])
+```
+
 | code | Redering |
 | --- | --- |
-| ```swift
-import Foundation
-import SwiftUI
-
-struct Previews_Test_Previews: PreviewProvider {
-  static var previews: some View {
-    VStack {
-      Label("Variation Preview", systemImage: "basketball")
-        .fontWeight(.bold)
-        .foregroundColor(Color("fg", bundle: .module))
-        .padding()
-        .background(Color("bg", bundle: .module))
-        .cornerRadius(4)
-        .environmentVariations([ .colorScheme(.light), .colorScheme(.dark), .layoutDirection(.rightToLeft), .dynamicTypeSize(.xSmall), .dynamicTypeSize(.large), .dynamicTypeSize(.xxxLarge)])
-        .previewLayout(.sizeThatFits)
-    }
-  }
-}
-``` | <img width="1512" alt="Capture d’écran 2023-03-28 à 22 29 38" src="https://user-images.githubusercontent.com/661647/228359745-cda5eaaf-837b-4188-a125-a09a41ecdc34.png"> |
-
-<img width="400" alt="Capture d’écran 2023-03-28 à 22 28 09" src="https://user-images.githubusercontent.com/661647/228359752-1c609881-a5c0-4e09-a988-0a18972776a7.png">
-
-https://user-images.githubusercontent.com/661647/228359780-61f1a897-1b80-41ed-a0b8-26c6b6b5e279.mov
-
+| ![honrizontal](https://user-images.githubusercontent.com/661647/228528660-6237f9e3-c913-4870-8c38-58fdd8869978.png) | <img width="1512" alt="Capture d’écran 2023-03-28 à 22 29 38" src="https://user-images.githubusercontent.com/661647/228359745-cda5eaaf-837b-4188-a125-a09a41ecdc34.png"> |
+|![vertical](https://user-images.githubusercontent.com/661647/228528750-763f6a7c-e2c0-4fe7-9bd8-499bb239f9c2.png) | <img width="400" alt="Capture d’écran 2023-03-28 à 22 28 09" src="https://user-images.githubusercontent.com/661647/228359752-1c609881-a5c0-4e09-a988-0a18972776a7.png"> |
+| ![separated](https://user-images.githubusercontent.com/661647/228529029-120bb8ff-1d2c-4863-b97a-1b79b3ded761.png) | https://user-images.githubusercontent.com/661647/228359780-61f1a897-1b80-41ed-a0b8-26c6b6b5e279.mov |
