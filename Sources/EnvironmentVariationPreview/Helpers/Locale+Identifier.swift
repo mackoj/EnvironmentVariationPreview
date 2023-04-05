@@ -1,11 +1,16 @@
 import Foundation
 
+/// An extension to the `Locale` type, providing a custom initializer and an `Identifier` enumeration.
 extension Locale {
   
+  /// Initializes a `Locale` using an `Identifier` enumeration case.
+  ///
+  /// - Parameter identifier: An `Identifier` enumeration case representing the locale identifier.
   init(_ identifier: Identifier) {
     self = Locale(identifier: identifier.rawValue)
   }
   
+  /// A type-safe and readable enumeration to specify locale identifiers.
   enum Identifier: String, RawRepresentable {
     case af = "af"
     case af_na = "af_NA"
