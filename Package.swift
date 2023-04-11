@@ -7,10 +7,7 @@ let package = Package(
   name: "EnvironmentVariationPreview",
   
   platforms: [
-    .iOS(.v16),
     .macOS(.v13),
-    .tvOS(.v16),
-    .watchOS(.v9)
   ],
   
   products: [
