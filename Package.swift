@@ -7,11 +7,13 @@ let package = Package(
   name: "EnvironmentVariationPreview",
   
   platforms: [
-    .macOS(.v13),
+    .iOS(.v14),
+    .macOS(.v11),
+    .tvOS(.v14),
+    .watchOS(.v7),
   ],
   
   products: [
-    // Products define the executables and libraries a package produces, making them visible to other packages.
     .library(
       name: "EnvironmentVariationPreview",
       targets: ["EnvironmentVariationPreview"]
@@ -19,8 +21,6 @@ let package = Package(
   ],
   
   targets: [
-    // Targets are the basic building blocks of a package, defining a module or a test suite.
-    // Targets can depend on other targets in this package and products from dependencies.
     .target(
       name: "EnvironmentVariationPreview"
     ),

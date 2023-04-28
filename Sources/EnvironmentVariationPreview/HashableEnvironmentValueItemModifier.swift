@@ -11,12 +11,14 @@ extension View {
   ///
   /// - Parameter value: The `HashableEnvironmentValueItem` to apply to the view.
   /// - Returns: A new view with the environment value applied.
+  @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
   func applyEnvironmentValue(_ value: HashableEnvironmentValueItem) -> some View {
     self.modifier(EnvironmentValueItemModifier(environmentValue: value))
   }
 }
 
 /// A `ViewModifier` implementation for applying a `HashableEnvironmentValueItem` to a view.
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 struct EnvironmentValueItemModifier: ViewModifier {
   let environmentValue: HashableEnvironmentValueItem
   

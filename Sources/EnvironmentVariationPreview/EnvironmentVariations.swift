@@ -13,6 +13,7 @@ extension View {
   ///
   /// - Parameter variarions: A list of environment values to apply to the view. The default value is `[.colorScheme(.light), .colorScheme(.dark)]`.
   /// - Returns: A modified view that displays previews of the original view with each of the specified environment values.
+  @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
   public func environmentVariations(
     _ variarions: EnvironmentValueItemList = [.colorScheme(.light), .colorScheme(.dark)]
   ) -> some View {
@@ -20,7 +21,7 @@ extension View {
   }
 }
 
-
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 struct EnvironmentVariationsModifier: ViewModifier {
   /// The list of environment values to apply to the content view.
   let variarions: EnvironmentValueItemList
@@ -48,10 +49,7 @@ struct EnvironmentVariationsModifier: ViewModifier {
         .fixedSize()
         .clipShape(RoundedRectangle(cornerRadius: 4))
         .contentShape(RoundedRectangle(cornerRadius: 4))
-        .overlay {
-          RoundedRectangle(cornerRadius: 4)
-            .stroke(Color.black, lineWidth: 1)
-        }
+        .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color.black, lineWidth: 1), alignment: .center)
       }
     }
   }
