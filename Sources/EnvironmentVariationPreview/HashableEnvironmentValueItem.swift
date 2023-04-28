@@ -8,6 +8,7 @@ import Foundation
 ///
 /// The `@dynamicMemberLookup` attribute allows you to access properties and methods of the
 /// wrapped `EnvironmentValueItem` instance directly through the `HashableEnvironmentValueItem`.
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 @dynamicMemberLookup public struct HashableEnvironmentValueItem {
   public let id: UUID
   let item: EnvironmentValueItem
@@ -29,6 +30,7 @@ import Foundation
 }
 
 /// Add `Hashable` conformance to `HashableEnvironmentValueItem`.
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension HashableEnvironmentValueItem: Hashable {
   public func hash(into hasher: inout Hasher) {
     hasher.combine(id)
@@ -40,5 +42,6 @@ extension HashableEnvironmentValueItem: Hashable {
 }
 
 /// Add `Identifiable` conformance to `HashableEnvironmentValueItem`.
+@available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 extension HashableEnvironmentValueItem: Identifiable { }
 #endif
