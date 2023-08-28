@@ -136,14 +136,14 @@ public enum EnvironmentValueItem {
         return AnyView(content)
       case .horizontalSizeClass(let value): return AnyView(content.environment(\.horizontalSizeClass, value))
       case .horizontalScrollBounceBehavior(let value):
-        if #available(iOS 16.4, macOS 13.3, tvOS 16.4, watchOS 9.4, *), let convertedValue = value as? ScrollBounceBehavior {
-          return AnyView(content.environment(\.horizontalScrollBounceBehavior, convertedValue))
-        }
+//        if #available(iOS 16.4, macOS 13.3, tvOS 16.4, watchOS 9.4, *), let convertedValue = value as? ScrollBounceBehavior {
+//          return AnyView(content.environment(\.horizontalScrollBounceBehavior, convertedValue))
+//        }
         return AnyView(content)
       case .verticalScrollBounceBehavior(let value):
-        if #available(iOS 16.4, macOS 13.3, tvOS 16.4, watchOS 9.4, *), let convertedValue = value as? ScrollBounceBehavior {
-          return AnyView(content.environment(\.verticalScrollBounceBehavior, convertedValue))
-        }
+//        if #available(iOS 16.4, macOS 13.3, tvOS 16.4, watchOS 9.4, *), let convertedValue = value as? ScrollBounceBehavior {
+//          return AnyView(content.environment(\.verticalScrollBounceBehavior, convertedValue))
+//        }
         return AnyView(content)
       case .isEnabled(let value): return AnyView(content.environment(\.isEnabled, value))
       case .imageScale(let value): return AnyView(content.environment(\.imageScale, value))
