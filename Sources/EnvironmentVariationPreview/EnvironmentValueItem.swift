@@ -49,7 +49,7 @@ public enum EnvironmentValueItem {
   case defaultMinListRowHeight(CGFloat)
   case defaultMinListHeaderHeight(CGFloat)
   case disableAutocorrection(Bool)
-  case editMode(Binding<EditMode>?)
+  case editMode(Binding<Any>?)
   case font(Font?)
   case headerProminence(Any) // Prominence
   case horizontalSizeClass(UserInterfaceSizeClass?)
@@ -90,7 +90,11 @@ public enum EnvironmentValueItem {
     switch self {
       case .accessibilityEnabled(let value): return AnyView(content.environment(\.accessibilityEnabled, value))
       case .allowsTightening(let value): return AnyView(content.environment(\.allowsTightening, value))
-      case .autocorrectionDisabled(let value): return AnyView(content.environment(\.autocorrectionDisabled, value))
+      case .autocorrectionDisabled(let value): 
+        if #available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 8.0, *) {
+          return AnyView(content.environment(\.autocorrectionDisabled, value))
+        }
+        return AnyView(content)
       case .backgroundMaterial(let value):
         if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *), let convertedValue = value as? Material {
           return AnyView(content.environment(\.backgroundMaterial, convertedValue))
@@ -104,9 +108,9 @@ public enum EnvironmentValueItem {
       case .calendar(let value): return AnyView(content.environment(\.calendar, value))
       case .colorScheme(let value): return AnyView(content.environment(\.colorScheme, value))
       case .controlSize(let value):
-        if #available(iOS 15.0, macOS 10.15, watchOS 9.0, *), let convertedValue = value as? ControlSize {
-          return AnyView(content.environment(\.controlSize, convertedValue))
-        }
+//        if #available(iOS 15.0, macOS 10.15, watchOS 9.0, *), let convertedValue = value as? ControlSize {
+//          return AnyView(content.environment(\.controlSize, convertedValue))
+//        }
         return AnyView(content)
       case .contentTransition(let value):
         if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *), let convertedValue = value as? ContentTransition {
@@ -126,8 +130,16 @@ public enum EnvironmentValueItem {
         return AnyView(content)
       case .defaultMinListRowHeight(let value): return AnyView(content.environment(\.defaultMinListRowHeight, value))
       case .defaultMinListHeaderHeight(let value): return AnyView(content.environment(\.defaultMinListHeaderHeight, value))
-      case .disableAutocorrection(let value): return AnyView(content.environment(\.disableAutocorrection, value))
-      case .editMode(let value): return AnyView(content.environment(\.editMode, value))
+      case .disableAutocorrection(let value): 
+        if #available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 8.0, visionOS 1.0, *) {
+          return AnyView(content.environment(\.disableAutocorrection, value))
+        }
+        return AnyView(content)
+      case .editMode(let value):
+//        if #available(iOS 13.0, tvOS 13.0, *), let editMode = value as? Binding<EditMode>? {
+//          return AnyView(content.environment(\.editMode, editMode))
+//        }
+        return AnyView(content)
       case .font(let value): return AnyView(content.environment(\.font, value))
       case .headerProminence(let value):
         if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *), let convertedValue = value as? Prominence {
@@ -171,9 +183,9 @@ public enum EnvironmentValueItem {
       case .managedObjectContext(let value): return AnyView(content.environment(\.managedObjectContext, value))
       case .multilineTextAlignment(let value): return AnyView(content.environment(\.multilineTextAlignment, value))
       case .menuIndicatorVisibility(let value):
-        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *), let convertedValue = value as? Visibility {
-          return AnyView(content.environment(\.menuIndicatorVisibility, convertedValue))
-        }
+//        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, *), let convertedValue = value as? Visibility {
+//          return AnyView(content.environment(\.menuIndicatorVisibility, convertedValue))
+//        }
         return AnyView(content)
       case .openURL(let value):
         if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *) {
