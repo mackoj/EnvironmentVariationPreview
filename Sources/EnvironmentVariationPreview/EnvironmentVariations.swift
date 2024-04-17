@@ -31,6 +31,9 @@ extension View {
 
 @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
 struct EnvironmentVariationsModifier: ViewModifier {
+  @State var screenSize: CGSize = .zero
+  @State var contentSize: CGSize = .zero
+
   /// The list of environment values to apply to the content view.
   let variarions: EnvironmentValueItemList
   
@@ -38,34 +41,83 @@ struct EnvironmentVariationsModifier: ViewModifier {
   let alignment: HorizontalAlignment
   
   /// The distance between adjacent subviews, or `nil` if you want the stack to choose a default distance for each pair of subviews.
-  let spacing: CGFloat?
+  var spacing: CGFloat? = .zero
+
+  var columns: [GridItem] {
+    if screenSize == .zero || contentSize == .zero {
+      return [GridItem(.flexible(), spacing: spacing), GridItem(.flexible(), spacing: spacing), GridItem(.flexible(), spacing: spacing)]
+    }
+    let count = screenSize.width <= contentSize.width ? 3 : Int(screenSize.width / contentSize.width)
+//    let count = 3
+    let width = contentSize.width < 10 ? 10 : contentSize.width
+    let output = Array(0..<count).map { _ in GridItem(.flexible(maximum: width), spacing: spacing) }
+    print("contentSize.width:", contentSize.width)
+//    print("screenSize.width:", screenSize.width)
+    print("output.count:", output.count)
+    print("output:", output)
+    return output
+  }
 
   /// Returns a modified view that displays previews of the content view with each of the specified environment values.
   ///
   /// - Parameter content: The content view to which the environment values will be applied.
   /// - Returns: A modified view that displays previews of the content view with each of the specified environment values.
   func body(content: Content) -> some View {
-    Group {
-      ForEach(variarions, id: \.self) { environmentValue in
-        VStack(alignment: alignment, spacing: spacing) {
-          content
-            .applyEnvironmentValue(environmentValue)
-            .padding()
-          
-          Text(environmentValue.description)
-            .foregroundColor(.white)
-            .font(.body.weight(.bold))
-            .padding(2)
-            .frame(maxWidth: .infinity)
-            .background(Color.black)
+    ScrollView {
+      LazyVGrid(columns: columns, spacing: spacing) {
+        ForEach(variarions, id: \.self) { environmentValue in
+          VStack(alignment: alignment, spacing: spacing) {
+            content
+              .applyEnvironmentValue(environmentValue)
+              .padding()
+            
+            Text(environmentValue.description)
+              .foregroundColor(.white)
+              .font(.body.weight(.bold))
+              .padding(2)
+              .frame(maxWidth: .infinity)
+              .background(Color.black)
+          }
+          .background(environmentValue.colorScheme == .dark ? Color.black : Color.white)
+          .fixedSize()
+          .clipShape(RoundedRectangle(cornerRadius: 4))
+          .contentShape(RoundedRectangle(cornerRadius: 4))
+          .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color.black, lineWidth: 1), alignment: .center)
+          .localReadSize { 
+            if $0.width > contentSize.width {
+              contentSize.width = $0.width
+            }
+            if $0.height > contentSize.height {
+              contentSize.height = $0.height
+            }
+          }
         }
-        .background(environmentValue.colorScheme == .dark ? Color.black : Color.white)
-        .fixedSize()
-        .clipShape(RoundedRectangle(cornerRadius: 4))
-        .contentShape(RoundedRectangle(cornerRadius: 4))
-        .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color.black, lineWidth: 1), alignment: .center)
       }
+      .localReadSize { screenSize = $0 }
+      .padding()
     }
+
+//    Group {
+//      ForEach(variarions, id: \.self) { environmentValue in
+//        VStack(alignment: alignment, spacing: spacing) {
+//          content
+//            .applyEnvironmentValue(environmentValue)
+//            .padding()
+//          
+//          Text(environmentValue.description)
+//            .foregroundColor(.white)
+//            .font(.body.weight(.bold))
+//            .padding(2)
+//            .frame(maxWidth: .infinity)
+//            .background(Color.black)
+//        }
+//        .background(environmentValue.colorScheme == .dark ? Color.black : Color.white)
+//        .fixedSize()
+//        .clipShape(RoundedRectangle(cornerRadius: 4))
+//        .contentShape(RoundedRectangle(cornerRadius: 4))
+//        .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color.black, lineWidth: 1), alignment: .center)
+//      }
+//    }
   }
 }
 #endif
