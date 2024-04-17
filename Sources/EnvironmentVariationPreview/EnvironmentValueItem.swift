@@ -206,9 +206,11 @@ public enum EnvironmentValueItem {
         }
         return AnyView(content)
       case .scrollDismissesKeyboardMode(let value):
+        #if !os(visionOS)
         if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *), let convertedValue = value as? ScrollDismissesKeyboardMode {
           return AnyView(content.environment(\.scrollDismissesKeyboardMode, convertedValue))
         }
+        #endif
         return AnyView(content)
       case .textCase(let value): return AnyView(content.environment(\.textCase, value))
       case .timeZone(let value): return AnyView(content.environment(\.timeZone, value))
