@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  host:
+    name: macOS host
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # Everything is simulator-only, so this builds an empty module: it checks the package and its guards.
+      - name: Build
+        run: swift build --build-tests
+      - name: Test
+        run: swift test
+      - name: Architecture rules
+        run: swift test --package-path Architecture
+
+  simulators:
+    name: Simulators
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Test on an iOS simulator
+        run: |
+          udid=$(xcrun simctl list devices available --json \
+            | jq -r '[.devices | to_entries[] | select(.key | contains("iOS")) | .value[] | select(.name | startswith("iPhone"))][0].udid')
+          echo "Testing on $udid"
+          xcodebuild test -scheme EnvironmentVariationPreview -destination "id=$udid" -quiet
+      - name: Build for tvOS, watchOS and visionOS simulators
+        run: |
+          for platform in "tvOS Simulator" "watchOS Simulator" "visionOS Simulator"; do
+            echo "::group::$platform"
+            xcodebuild build -scheme EnvironmentVariationPreview -destination "generic/platform=$platform" -quiet
+            echo "::endgroup::"
+          done

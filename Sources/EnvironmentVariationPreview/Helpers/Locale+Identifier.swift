@@ -1,3 +1,4 @@
+#if targetEnvironment(simulator)
 import Foundation
 
 /// An extension to the `Locale` type, providing a custom initializer and an `Identifier` enumeration.
@@ -954,3 +955,4 @@ extension Locale {
     case zu_za = "zu_ZA"
   }
 }
+#endif

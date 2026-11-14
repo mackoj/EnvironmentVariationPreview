@@ -1,0 +1,5 @@
+# Every job runs on GitHub-hosted runners.
+self-hosted-runner:
+  labels: []
+# The repository defines no configuration variables, so any `vars.*` reference is a typo.
+config-variables: []
