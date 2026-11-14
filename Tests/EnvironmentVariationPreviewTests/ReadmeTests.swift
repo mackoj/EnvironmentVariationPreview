@@ -17,6 +17,7 @@ private struct ProfileCard: View {
 }
 
 final class ReadmeTests: XCTestCase {
+  @available(iOS 15.0, tvOS 15.0, watchOS 8.0, *) // DynamicTypeSize
   func testUsage() {
     let view = ProfileCard()
       .environmentVariations([
@@ -31,6 +32,7 @@ final class ReadmeTests: XCTestCase {
     XCTAssertNotNil(view)
   }
 
+  @available(iOS 15.0, tvOS 15.0, watchOS 8.0, *) // DynamicTypeSize
   func testDefaultsAlignmentAndSpacing() {
     _ = ProfileCard().environmentVariations()
     _ = ProfileCard().environmentVariations([.horizontalSizeClass(.compact), .horizontalSizeClass(.regular)], .leading, 16)

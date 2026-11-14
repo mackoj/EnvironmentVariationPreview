@@ -43,6 +43,7 @@ final class EnvironmentVariationPreviewTests: XCTestCase {
   }
 
   /// The captions drawn on site/index.html.
+  @available(iOS 15.0, tvOS 15.0, watchOS 8.0, *) // DynamicTypeSize
   func testCaptionsShownOnTheSite() {
     let list: EnvironmentValueItemList = [
       .colorScheme(.light), .colorScheme(.dark), .layoutDirection(.rightToLeft),
