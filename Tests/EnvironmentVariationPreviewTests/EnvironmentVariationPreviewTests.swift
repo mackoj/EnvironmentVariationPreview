@@ -41,5 +41,22 @@ final class EnvironmentVariationPreviewTests: XCTestCase {
     let view = Text("Hello").environmentVariations()
     XCTAssertNotNil(view)
   }
+
+  /// The captions drawn on site/index.html.
+  func testCaptionsShownOnTheSite() {
+    let list: EnvironmentValueItemList = [
+      .colorScheme(.light), .colorScheme(.dark), .layoutDirection(.rightToLeft),
+      .dynamicTypeSize(DynamicTypeSize.xSmall), .dynamicTypeSize(DynamicTypeSize.xxxLarge),
+    ]
+    XCTAssertEqual(list.map(\.description), [
+      "colorScheme: light",
+      "colorScheme: dark",
+      "layoutDirection: rightToLeft",
+      "dynamicTypeSize: xSmall",
+      "dynamicTypeSize: xxxLarge",
+    ])
+    let locale: EnvironmentValueItemList = [.locale(Locale(identifier: "fr_FR"))]
+    XCTAssertTrue(locale[0].description.hasPrefix("locale: fr_FR"), locale[0].description)
+  }
 }
 #endif
