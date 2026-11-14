@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EnvironmentVariationPreview · every environment in one SwiftUI preview</title>
+<meta name="description" content="A SwiftUI view modifier that renders one view under many environments at once: light and dark, right-to-left, dynamic type sizes, locales, size classes and 30 more environment values, each with a caption. Simulator-only, zero dependencies.">
+<meta property="og:title" content="EnvironmentVariationPreview · every environment in one SwiftUI preview">
+<meta property="og:description" content="One modifier, .environmentVariations([...]), shows your SwiftUI view in light and dark, RTL, every dynamic type size and any locale side by side. Simulator-only, no dependencies.">
+<meta property="og:type" content="website">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f6fe8'/%3E%3Crect x='6' y='7' width='9' height='18' rx='2' fill='%23fff'/%3E%3Crect x='17' y='7' width='9' height='18' rx='2' fill='%23111'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --text: #15181d;
+  --muted: #565d69;
+  --line: #dde2ea;
+  --accent: #2f6fe8;
+  --accent-ink: #ffffff;
+  --accent-soft: #e3ecfd;
+  --code-bg: #16181c;
+  --code-text: #e8eaee;
+  --code-muted: #8a909b;
+  --tok-key: #ff7ab2;
+  --tok-str: #fc6a5d;
+  --tok-type: #5dd8ff;
+  --tok-fn: #67b7a4;
+  --tok-num: #d0bf69;
+  --shadow: 0 1px 2px rgb(20 24 29 / 6%), 0 8px 24px rgb(20 24 29 / 7%);
+  --radius: 14px;
+  --max: 1120px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111317;
+    --surface: #181b20;
+    --surface-2: #20242b;
+    --text: #eef0f4;
+    --muted: #a3aab6;
+    --line: #2d323b;
+    --accent: #5b8ff5;
+    --accent-ink: #0b1220;
+    --accent-soft: #1b2a47;
+    --code-bg: #0c0e11;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 25%);
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  overflow-x: clip;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+code, pre { font: 14px/1.55 ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+.grid > *, .features > *, .values > *, .install > * { min-width: 0; }
+:not(pre) > code { overflow-wrap: anywhere; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: .05em .35em; font-size: .88em; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+section { padding: 84px 0; }
+section + section { border-top: 1px solid var(--line); }
+h1, h2, h3 { line-height: 1.15; letter-spacing: -.02em; margin: 0; }
+h2 { font-size: clamp(28px, 4vw, 40px); }
+h3 { font-size: 19px; letter-spacing: -.01em; }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+.lead { color: var(--muted); font-size: 19px; max-width: 700px; margin: 16px 0 0; }
+
+nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; gap: 24px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); text-decoration: none; min-width: 0; }
+.brand span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.brand svg { width: 26px; height: 26px; flex: none; }
+nav .links { display: flex; gap: 22px; margin-left: auto; font-size: 15px; }
+nav .links a { color: var(--muted); text-decoration: none; }
+nav .links a:hover { color: var(--text); }
+@media (max-width: 760px) { nav .links a:not(.gh) { display: none; } }
+
+.hero { padding: 88px 0 84px; }
+.hero .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+@media (max-width: 960px) { .hero .grid { grid-template-columns: 1fr; gap: 40px; } }
+.hero h1 { font-size: clamp(38px, 6vw, 62px); }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; padding: 0; list-style: none; }
+.pills li { font-size: 13px; font-weight: 600; padding: 4px 11px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.button { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-weight: 600; font-size: 16px; text-decoration: none; border: 1px solid var(--line); color: var(--text); background: var(--surface); }
+.button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.button:hover { filter: brightness(1.05); }
+.button svg { width: 18px; height: 18px; }
+
+.code { background: var(--code-bg); color: var(--code-text); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.code .bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid rgb(255 255 255 / 7%); color: var(--code-muted); font-size: 13px; }
+.code .bar i { width: 11px; height: 11px; border-radius: 50%; background: #3a3d43; display: inline-block; }
+.code .bar span { margin-left: 8px; }
+.code pre { margin: 0; padding: 20px; overflow-x: auto; }
+.k { color: var(--tok-key); font-weight: 600; }
+.s { color: var(--tok-str); }
+.t { color: var(--tok-type); }
+.f { color: var(--tok-fn); }
+.n { color: var(--tok-num); }
+.c { color: var(--code-muted); font-style: italic; }
+
+/* A drawing of what the modifier renders: one card per variation, captioned in a black bar. */
+.canvas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 22px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); margin-top: 18px; }
+@media (max-width: 560px) { .canvas { grid-template-columns: repeat(2, 1fr); } }
+.var { border: 1px solid #000; border-radius: 4px; overflow: hidden; background: #fff; color: #111; display: flex; flex-direction: column; min-width: 0; }
+.var.dark { background: #000; color: #f4f4f4; }
+.var .ui { padding: 12px; display: flex; gap: 8px; align-items: center; flex: 1; }
+.var .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); flex: none; }
+.var .lines { flex: 1; min-width: 0; }
+.var .lines b { display: block; font-size: 13px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.var .lines small { display: block; font-size: 11px; opacity: .65; line-height: 1.3; }
+.var.rtl .ui { flex-direction: row-reverse; text-align: right; }
+.var.big .lines b { font-size: 18px; }
+.var.big .lines small { font-size: 14px; }
+.var.small .lines b { font-size: 10px; }
+.var.small .lines small { font-size: 8.5px; }
+.var .cap { background: #000; color: #fff; font: 700 10.5px/1.3 -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; padding: 3px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.problem { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+@media (max-width: 860px) { .problem { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); min-width: 0; }
+.card p { color: var(--muted); margin: 8px 0 0; }
+.card .num { font-size: 34px; font-weight: 800; color: var(--accent); letter-spacing: -.03em; line-height: 1; margin-bottom: 10px; }
+
+.split { display: grid; grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: start; margin-top: 40px; }
+@media (max-width: 960px) { .split { grid-template-columns: 1fr; } }
+.split > * { min-width: 0; }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { counter-increment: s; position: relative; padding: 0 0 22px 46px; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 700; display: grid; place-items: center; font-size: 15px; }
+.steps li p { margin: 4px 0 0; color: var(--muted); }
+
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+@media (max-width: 960px) { .features { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .features { grid-template-columns: 1fr; } }
+
+.values { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+@media (max-width: 960px) { .values { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .values { grid-template-columns: 1fr; } }
+.values ul { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.values li code { font-size: 12.5px; }
+
+.install { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 36px; }
+@media (max-width: 860px) { .install { grid-template-columns: 1fr; } }
+.note { margin-top: 28px; padding: 16px 20px; border-radius: 12px; background: var(--accent-soft); color: var(--text); }
+
+footer { padding: 40px 0 56px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; }
+footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="EnvironmentVariationPreview home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#2f6fe8"/><rect x="6" y="7" width="9" height="18" rx="2" fill="#fff"/><rect x="17" y="7" width="9" height="18" rx="2" fill="#111"/></svg>
+      <span>EnvironmentVariationPreview</span>
+    </a>
+    <div class="links">
+      <a href="#why">Why</a>
+      <a href="#how">How</a>
+      <a href="#values">Values</a>
+      <a href="#install">Install</a>
+      <a class="gh" href="https://github.com/mackoj/EnvironmentVariationPreview">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap grid">
+    <div>
+      <ul class="pills">
+        <li>SwiftUI</li><li>iOS 14+ · tvOS · watchOS · visionOS</li><li>Zero dependencies</li>
+      </ul>
+      <h1>Every environment.<br><em>One preview.</em></h1>
+      <p class="lead">One view modifier renders your SwiftUI view under every environment you care about, side by side and captioned: light and dark, right-to-left, the smallest and largest dynamic type, any locale, and 30 more environment values.</p>
+      <div class="cta">
+        <a class="button primary" href="#install">Add the package</a>
+        <a class="button" href="https://github.com/mackoj/EnvironmentVariationPreview">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="code">
+        <div class="bar"><i></i><i></i><i></i><span>ProfileCard.swift</span></div>
+<pre><span class="k">import</span> SwiftUI
+<span class="k">import</span> EnvironmentVariationPreview
+
+<span class="k">struct</span> <span class="t">ProfileCard_Previews</span>: <span class="t">PreviewProvider</span> {
+  <span class="k">static var</span> previews: <span class="k">some</span> <span class="t">View</span> {
+    <span class="t">ProfileCard</span>()
+      .<span class="f">environmentVariations</span>([
+        .<span class="f">colorScheme</span>(.light),
+        .<span class="f">colorScheme</span>(.dark),
+        .<span class="f">layoutDirection</span>(.rightToLeft),
+        .<span class="f">dynamicTypeSize</span>(<span class="t">DynamicTypeSize</span>.xSmall),
+        .<span class="f">dynamicTypeSize</span>(<span class="t">DynamicTypeSize</span>.xxxLarge),
+        .<span class="f">locale</span>(<span class="t">Locale</span>(identifier: <span class="s">"fr_FR"</span>)),
+      ])
+  }
+}</pre>
+      </div>
+      <div class="canvas" role="img" aria-label="Six renders of a profile card: light, dark, right-to-left, extra small type, extra large type and French locale, each with a caption naming its environment value.">
+        <div class="var"><div class="ui"><span class="avatar"></span><span class="lines"><b>Ada Lovelace</b><small>Mar 28, 2023</small></span></div><div class="cap">colorScheme: light</div></div>
+        <div class="var dark"><div class="ui"><span class="avatar"></span><span class="lines"><b>Ada Lovelace</b><small>Mar 28, 2023</small></span></div><div class="cap">colorScheme: dark</div></div>
+        <div class="var rtl"><div class="ui"><span class="avatar"></span><span class="lines"><b>Ada Lovelace</b><small>Mar 28, 2023</small></span></div><div class="cap">layoutDirection: rightToLeft</div></div>
+        <div class="var small"><div class="ui"><span class="avatar"></span><span class="lines"><b>Ada Lovelace</b><small>Mar 28, 2023</small></span></div><div class="cap">dynamicTypeSize: xSmall</div></div>
+        <div class="var big"><div class="ui"><span class="avatar"></span><span class="lines"><b>Ada Lovelace</b><small>Mar 28, 2023</small></span></div><div class="cap">dynamicTypeSize: xxxLarge</div></div>
+        <div class="var"><div class="ui"><span class="avatar"></span><span class="lines"><b>Ada Lovelace</b><small>28 mars 2023</small></span></div><div class="cap">locale: fr_FR</div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="why">
+  <div class="wrap">
+    <p class="eyebrow">The problem</p>
+    <h2>Your view works. In one environment.</h2>
+    <p class="lead">Each preview shows one combination of settings. The bugs live in the others: the label that truncates at the largest text size, the chevron that points the wrong way right-to-left, the gray-on-black that vanishes in dark mode.</p>
+    <div class="problem">
+      <div class="card"><div class="num">12</div><h3>Dynamic type sizes</h3><p>From <code>xSmall</code> to <code>accessibility5</code>. Large text is where layouts break, and it is the setting you are least likely to have on.</p></div>
+      <div class="card"><div class="num">2 × 2</div><h3>Schemes and directions</h3><p>Light and dark, left-to-right and right-to-left. A preview per combination means copying the same view four times.</p></div>
+      <div class="card"><div class="num">40</div><h3>Environment values</h3><p>Locale, size classes, legibility weight, redaction, line limits, symbol variants… each one a <code>.environment(\.key, value)</code> you have to remember.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2>One modifier. One list. Captioned renders.</h2>
+    <div class="split">
+      <ol class="steps">
+        <li><h3>List the environments</h3><p>An array literal of <code>EnvironmentValueItem</code> cases: <code>.colorScheme(.dark)</code>, <code>.locale(…)</code>, <code>.horizontalSizeClass(.compact)</code>.</p></li>
+        <li><h3>Apply <code>.environmentVariations</code></h3><p>On the view in your preview. With no argument it shows light and dark.</p></li>
+        <li><h3>Read the canvas</h3><p>One render per value, each with a black caption naming the case and its value, on a background that follows its color scheme. Ready for a snapshot test, too.</p></li>
+      </ol>
+      <div>
+        <div class="code">
+          <div class="bar"><i></i><i></i><i></i><span>Defaults, alignment and spacing</span></div>
+<pre><span class="c">// Light and dark, the default.</span>
+<span class="t">ProfileCard</span>().<span class="f">environmentVariations</span>()
+
+<span class="c">// Leading-aligned captions, 16 points between view and caption.</span>
+<span class="t">ProfileCard</span>().<span class="f">environmentVariations</span>(
+  [.<span class="f">horizontalSizeClass</span>(.compact), .<span class="f">horizontalSizeClass</span>(.regular)],
+  .leading,
+  <span class="n">16</span>
+)
+
+<span class="c">// Values whose type is newer than iOS 14 take the type's name.</span>
+<span class="t">ProfileCard</span>().<span class="f">environmentVariations</span>([
+  .<span class="f">dynamicTypeSize</span>(<span class="t">DynamicTypeSize</span>.accessibility5),
+  .<span class="f">legibilityWeight</span>(.bold),
+  .<span class="f">redactionReasons</span>(.placeholder),
+])</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <p class="eyebrow">Why this library</p>
+    <h2>Small, safe to depend on.</h2>
+    <div class="features">
+      <div class="card"><h3>Nothing ships</h3><p>Every file is wrapped in <code>#if targetEnvironment(simulator)</code>. Device and Mac builds compile an empty module, so linking it from a UI package costs your App Store binary nothing.</p></div>
+      <div class="card"><h3>Zero dependencies</h3><p>Foundation, SwiftUI and CoreData (for <code>managedObjectContext</code>). Nothing else to resolve, audit or update.</p></div>
+      <div class="card"><h3>iOS 14 and up</h3><p>Values newer than the floor, like <code>DynamicTypeSize</code> or <code>Material</code>, apply under <code>#available</code> and fall back to the unchanged view on older systems.</p></div>
+      <div class="card"><h3>Captions you can trust</h3><p>Each render is labelled with its case and value, so screenshots and snapshot diffs say which environment broke.</p></div>
+      <div class="card"><h3>Every Apple simulator</h3><p>CI builds for iOS, tvOS, watchOS and visionOS simulators and runs the tests on an iPhone simulator.</p></div>
+      <div class="card"><h3>Checked conventions</h3><p>The library's rules (simulator guard, imports, availability, captions) run as <a href="https://github.com/mackoj/swift-llm-check">swift-llm-check</a> tests. <a href="https://github.com/mackoj/EnvironmentVariationPreview/blob/main/docs/architecture-rules.md">Read them</a>.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="values">
+  <div class="wrap">
+    <p class="eyebrow">Supported values</p>
+    <h2>40 environment values, one enum.</h2>
+    <p class="lead">Each is a case of <code>EnvironmentValueItem</code> named after its <code>EnvironmentValues</code> key.</p>
+    <div class="values">
+      <div class="card"><h3>Appearance</h3><ul>
+        <li><code>colorScheme</code></li><li><code>backgroundMaterial</code></li><li><code>backgroundStyle</code></li><li><code>displayScale</code></li><li><code>imageScale</code></li><li><code>symbolVariants</code></li><li><code>symbolRenderingMode</code></li><li><code>isLuminanceReduced</code></li><li><code>redactionReasons</code></li>
+      </ul></div>
+      <div class="card"><h3>Text</h3><ul>
+        <li><code>dynamicTypeSize</code></li><li><code>font</code></li><li><code>legibilityWeight</code></li><li><code>lineLimit</code></li><li><code>lineSpacing</code></li><li><code>minimumScaleFactor</code></li><li><code>multilineTextAlignment</code></li><li><code>truncationMode</code></li><li><code>allowsTightening</code></li><li><code>textCase</code></li>
+      </ul></div>
+      <div class="card"><h3>Locale and layout</h3><ul>
+        <li><code>locale</code></li><li><code>calendar</code></li><li><code>timeZone</code></li><li><code>layoutDirection</code></li><li><code>horizontalSizeClass</code></li><li><code>verticalSizeClass</code></li><li><code>defaultMinListRowHeight</code></li><li><code>defaultMinListHeaderHeight</code></li><li><code>headerProminence</code></li>
+      </ul></div>
+      <div class="card"><h3>Behaviour</h3><ul>
+        <li><code>isEnabled</code></li><li><code>accessibilityEnabled</code></li><li><code>isScrollEnabled</code></li><li><code>autocorrectionDisabled</code></li><li><code>disableAutocorrection</code></li><li><code>scenePhase</code></li><li><code>openURL</code></li><li><code>managedObjectContext</code></li><li><code>menuOrder</code></li><li><code>contentTransition</code></li><li><code>contentTransitionAddsDrawingGroup</code></li><li><code>scrollDismissesKeyboardMode</code></li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <p class="eyebrow">Install</p>
+    <h2>Add it with Swift Package Manager.</h2>
+    <div class="install">
+      <div class="code">
+        <div class="bar"><i></i><i></i><i></i><span>Package.swift</span></div>
+<pre>dependencies: [
+  .<span class="f">package</span>(
+    url: <span class="s">"https://github.com/mackoj/EnvironmentVariationPreview.git"</span>,
+    from: <span class="s">"1.1.4"</span>
+  ),
+],
+targets: [
+  .<span class="f">target</span>(
+    name: <span class="s">"MyUI"</span>,
+    dependencies: [<span class="s">"EnvironmentVariationPreview"</span>]
+  ),
+]</pre>
+      </div>
+      <div class="card">
+        <h3>In Xcode</h3>
+        <p>File › Add Package Dependencies…, paste <code>https://github.com/mackoj/EnvironmentVariationPreview.git</code>, and add the <code>EnvironmentVariationPreview</code> library to the target that holds your views.</p>
+        <h3 style="margin-top:20px">Requirements</h3>
+        <p>Swift 5.7.1 or later (Xcode 14.1+). iOS 14, macOS 11, tvOS 14, watchOS 7 or visionOS, running in a simulator or the preview canvas.</p>
+      </div>
+    </div>
+    <p class="note"><strong>Simulator only, on purpose.</strong> Outside the simulator the module is empty, so a call to <code>.environmentVariations</code> belongs in a preview or a test, which only build for the simulator. Wrap any other use in <code>#if targetEnvironment(simulator)</code>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>EnvironmentVariationPreview · MIT licence · by <a href="https://github.com/mackoj">mackoj</a></span>
+    <a href="https://github.com/mackoj/EnvironmentVariationPreview">GitHub</a>
+    <a href="https://swiftpackageindex.com/mackoj/EnvironmentVariationPreview">Swift Package Index</a>
+    <a href="https://github.com/mackoj/EnvironmentVariationPreview/blob/main/README.md">README</a>
+    <a href="https://github.com/mackoj/EnvironmentVariationPreview/blob/main/docs/architecture-rules.md">Architecture rules</a>
+    <a href="https://github.com/mackoj/EnvironmentVariationPreview/blob/main/docs/performance.md">Performance</a>
+  </div>
+</footer>
+</body>
+</html>
