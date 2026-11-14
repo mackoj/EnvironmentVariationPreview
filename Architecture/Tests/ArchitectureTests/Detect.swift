@@ -4,21 +4,6 @@ import SwiftSyntax
 
 /// The detectors, separate from the codebase so `DetectorTests` can run them on snippets.
 enum Detect {
-    /// Top-level code outside one whole-file `#if targetEnvironment(simulator)` with no `#else`. A file that is not
-    /// guarded at all is reported at its first statement; a guarded file at whatever sits beside the guard.
-    static func codeOutsideSimulatorGuard(in scope: Scope) -> [Match<Syntax>] {
-        scope.files.flatMap { file -> [Match<Syntax>] in
-            file.syntax.statements.compactMap { statement in
-                if let guarded = statement.item.as(IfConfigDeclSyntax.self), isSimulatorGuard(guarded) { return nil }
-                return Match(node: Syntax(statement), file: file)
-            }
-        }
-    }
-
-    private static func isSimulatorGuard(_ node: IfConfigDeclSyntax) -> Bool {
-        node.clauses.count == 1 && node.clauses.first?.condition?.trimmedDescription == "targetEnvironment(simulator)"
-    }
-
     /// What the library may import.
     static let allowedModules: Set<String> = ["Foundation", "SwiftUI", "CoreData"]
 
@@ -46,7 +31,7 @@ enum Detect {
     /// Public types without `@available`, and public members of extensions when neither has it.
     static func publicDeclarationsWithoutAvailability(in scope: Scope) -> [Declaration] {
         scope.declarations.filter { declaration in
-            guard declaration.hasModifier("public"), !declaration.hasAttribute("available") else { return false }
+            guard declaration.isPublic, !declaration.hasAttribute("available") else { return false }
             switch declaration.kind {
             case .struct, .class, .enum, .actor, .protocol:
                 return true
@@ -110,16 +95,5 @@ enum Detect {
             let member = call.calledExpression.as(MemberAccessExprSyntax.self), member.base == nil
         else { return nil }
         return member.declName.baseName.text
-    }
-}
-
-extension SyntaxProtocol {
-    /// The first node of a type under this one, in source order.
-    fileprivate func firstDescendant<Node: SyntaxProtocol>(of type: Node.Type) -> Node? {
-        for child in children(viewMode: .sourceAccurate) {
-            if let node = child.as(Node.self) { return node }
-            if let node = child.firstDescendant(of: type) { return node }
-        }
-        return nil
     }
 }

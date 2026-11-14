@@ -9,7 +9,7 @@ struct ArchitectureRules {
     @Test func sourcesAreSimulatorOnly() throws {
         let sources = try Self.sources()
         #expect(sources.relativePaths.count > 5)
-        expectNone(Detect.codeOutsideSimulatorGuard(in: sources), rule: .sourcesAreSimulatorOnly)
+        expectNone(sources.topLevelStatements(notUnder: "targetEnvironment(simulator)"), rule: .sourcesAreSimulatorOnly)
     }
 
     @Test func importsStayWithinBudget() throws {

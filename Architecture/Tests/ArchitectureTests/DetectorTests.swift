@@ -7,36 +7,6 @@ import Testing
         Scope(files: [SourceFile(path: path, source: source)])
     }
 
-    @Test func unguardedCodeIsFound() {
-        let found = Detect.codeOutsideSimulatorGuard(
-            in: scope(
-                """
-                import Foundation
-                #if targetEnvironment(simulator)
-                struct A {}
-                #else
-                struct B {}
-                #endif
-                #if os(iOS)
-                struct C {}
-                #endif
-                """))
-        #expect(found.map(\.location.line) == [1, 2, 7])
-    }
-
-    @Test func guardedFilePasses() {
-        let found = Detect.codeOutsideSimulatorGuard(
-            in: scope(
-                """
-                // A comment before the guard is fine.
-                #if targetEnvironment(simulator)
-                import SwiftUI
-                struct A {}
-                #endif
-                """))
-        #expect(found.isEmpty)
-    }
-
     @Test func importsOverBudgetAreFound() {
         let found = Detect.importsOverBudget(
             in: scope(
