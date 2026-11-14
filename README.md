@@ -74,7 +74,8 @@ ProfileCard().environmentVariations([.horizontalSizeClass(.compact), .horizontal
 
 Values whose type is newer than iOS 14 (`DynamicTypeSize`, `Material`, `SymbolVariants`, `MenuOrder`…) take `Any`, so
 write the type's name: `.dynamicTypeSize(DynamicTypeSize.xxxLarge)`, not `.dynamicTypeSize(.xxxLarge)`. On a system
-older than the type, the value is skipped and the view renders unchanged.
+older than the type, the value is skipped and the view renders unchanged. If your target still supports iOS 14, a preview
+that names `DynamicTypeSize` needs `@available(iOS 15.0, *)` on its `PreviewProvider`.
 
 ### Simulator only
 
