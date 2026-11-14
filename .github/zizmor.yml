@@ -1,0 +1,6 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        # Setting policies replaces zizmor's defaults, so keep the default for GitHub's own actions.
+        "actions/*": ref-pin
